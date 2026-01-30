@@ -6,12 +6,14 @@ class Command(BaseCommand):
     help = "Run the web scraper"
     # Hereda de BaseCommand, lo que permite que este comando sea ejecutable mediante python manage.py <nombre_comando>.
 
-    def handle(self, *args, **kwargs):
-        # Ejecuta función
-        data = scrape_website()
-        print("Scraped Data:", data)  # Agrega esta línea para depurar
-        # Guarda
-        for item in data:
-            ScrapedData.objects.create(title=item["title"], url=item["url"])
-        # Confirma
-        self.stdout.write(self.style.SUCCESS("Scraping completed!"))
+    def handle(self, *args, **options):
+        scraped_data = scrape_website()  # Aquí obtienes la lista con 'author' y 'quote'
+        
+        for item in scraped_data:
+            # CAMBIA ESTA LÍNEA:
+            ScrapedData.objects.create(
+                author=item["author"],  
+                quote=item["quote"]     
+            )
+            
+        self.stdout.write(self.style.SUCCESS('¡Datos guardados exitosamente en la DB!'))

@@ -25,9 +25,9 @@ def scrape_website():
     driver = webdriver.Firefox(service=service, options=options)
 
     # Navegar al sitio web
-    url = "https://jorgebenitezlopez.com"
+    url = "https://quotes.toscrape.com/"
     driver.get(url)
-    print(driver.title)  
+    print(f"URL confirmada: {driver.current_url}")
 # Esperar a que los elementos estén presentes
     try:
         WebDriverWait(driver, 10).until(
@@ -40,18 +40,18 @@ def scrape_website():
         driver.save_screenshot(screenshot_path)
         print(f"Captura de pantalla guardada en: {screenshot_path}")
 
-        titles = driver.find_elements(By.CSS_SELECTOR, "h1")
-        urls = driver.find_elements(By.CSS_SELECTOR, "a")
+        authors = driver.find_elements(By.CSS_SELECTOR, ".author")
+        quotes = driver.find_elements(By.CSS_SELECTOR, ".text")
     except Exception as e:
         print("Error al encontrar los elementos:", e)
         driver.quit()
         return []
 
     scraped_data = []
-    for title, link in zip(titles, urls):
+    for author, quote in zip(authors, quotes):
         scraped_data.append({
-            "title": title.text,
-            "url": link.get_attribute("href"),
+            "author": author.text,
+            "quote": quote.text,
         })
 
     print("Scraped data:", scraped_data)  # Para depuración
